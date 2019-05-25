@@ -1,0 +1,47 @@
+<script>
+let tooltipIdx = 0;
+
+const isVoidElement = el => [
+  'AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'
+].includes(el.tagName);
+
+const replaceTitleWithTooltip = el => {
+  const labelledby = el.getAttribute('aria-labelledby');
+  const tooltipId = (labelledby && labelledby.startsWith('tooltip-'))
+    ? labelledby
+    : `tooltip-${tooltipIdx++}`;
+  const title = el.title;
+
+  if (!title) return;
+
+  const tooltip = document.createElement('div');
+
+  const oldTooltip = document.querySelector(`#${tooltipId}[data-istooltip=true]`);
+  if (oldTooltip) oldTooltip.remove();
+
+  el.removeAttribute('title');
+
+  tooltip.dataset.istooltip = 'true'; // all `dataset` vals are strings
+  tooltip.classList.add('tooltip');
+  tooltip.textContent = title;
+  tooltip.id = tooltipId;
+
+  if (isVoidElement(el)) {
+    el.insertAdjacentElement('afterend', tooltip);
+  } else {
+    el.appendChild(tooltip);
+  }
+
+  el.setAttribute('aria-labelledby', tooltipId);
+
+  el.classList.add('has-tooltip');
+};
+
+const body = document.querySelector('body');
+
+setInterval(() => {
+  body.querySelectorAll('[title]').forEach(el => {
+    replaceTitleWithTooltip(el);
+  });
+}, 100);
+</script>

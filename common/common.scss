@@ -1,0 +1,26 @@
+.tooltip {
+  position: absolute;
+  text-align: center;
+
+  border-radius: 5px;
+  padding: 5px;
+  z-index: 99999999999999999999999999999999999999999;
+
+  background: fuchsia;
+  color: white;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 0.8rem;
+  font-weight: bold;
+
+  visibility: hidden;
+  opacity: 0;
+
+  transition: opacity 0.5s;
+}
+
+.has-tooltip:hover .tooltip, // non-empty els w. child
+.has-tooltip:hover + .tooltip, // empty els w. adjacent
+.tooltip:hover {
+  visibility: visible;
+  opacity: 1;
+}
